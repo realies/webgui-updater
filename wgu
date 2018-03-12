@@ -1,0 +1,28 @@
+#!/bin/bash
+! [[ $(cat /etc/unraid-version) =~ 6\.[4-9]\.[0-9] ]] && echo "unRAID 6.4.0-6.9.9 not found, exiting..." && exit
+cmd=$1;location=${2:-backup}
+function backupWebGui() {
+	[[ $(ls -A $location 2> /dev/null) ]] && echo "Backup directory not empty." && exit
+	echo "Backing up current webGui..." && rsync --info=progress2 -a "/usr/local/emhttp/" "$location/" && echo "Done"
+}
+function restoreWebGui() {
+	[[ -z $(ls -A $location) ]] && echo "Backup directory empty." && exit
+	echo "Restoring webGui backup..." && rm -rf /usr/local/emhttp/* && rsync --info=progress2 -a backup/* "/usr/local/emhttp/" && echo "Done"
+}
+function updateWebGui() {
+	[[ -z $(ls -A $location 2> /dev/null) ]] && read -p "Backup directory empty. Update without a backup? ;) [y/n]: " && ! [[ $REPLY = y ]] && exit
+	[[ -d update ]] && cd update && git pull && cd ..
+	! [[ -d update ]] && git clone -b 6.4-wip https://github.com/limetech/webGui update
+	 echo "Updating..." && rm -rf /usr/local/emhttp/* && rsync --info=progress2 -a update/* "/usr/local/emhttp/" && echo "Done"
+}
+if [[ $cmd = backup ]]; then
+	backupWebGui
+elif [[ $cmd = restore ]]; then
+	restoreWebGui
+elif [[ $cmd = update ]]; then
+	updateWebGui
+else
+	read -p "Backup current webGui and update to limetech/webGui/tree/6.4-wip? [y/n]: " && ! [[ $REPLY = y ]] && exit
+	backupWebGui
+	updateWebGui
+fi
