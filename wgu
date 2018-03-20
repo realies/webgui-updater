@@ -12,7 +12,7 @@ function restoreWebGui() {
 function updateWebGui() {
 	[[ -z $(ls -A $location 2> /dev/null) ]] && read -p "Backup directory empty. Update without a backup? ;) [y/n]: " && ! [[ $REPLY = y ]] && exit
 	[[ -d update ]] && cd update && git pull && cd ..
-	! [[ -d update ]] && git clone -b 6.4-wip https://github.com/limetech/webGui update
+	! [[ -d update ]] && git clone -b master https://github.com/limetech/webGui update
 	 echo "Updating..." && rm -rf /usr/local/emhttp/* && rsync --info=progress2 -a update/* "/usr/local/emhttp/" && echo "Done"
 }
 if [[ $cmd = backup ]]; then
@@ -22,7 +22,7 @@ elif [[ $cmd = restore ]]; then
 elif [[ $cmd = update ]]; then
 	updateWebGui
 else
-	read -p "Backup current webGui and update to limetech/webGui/tree/6.4-wip? [y/n]: " && ! [[ $REPLY = y ]] && exit
+	read -p "Backup current webGui and update to limetech/webGui/tree/master? [y/n]: " && ! [[ $REPLY = y ]] && exit
 	backupWebGui
 	updateWebGui
 fi

@@ -3,7 +3,7 @@ This tool allows unRAID users to update their webgui to its latest available ver
 
 ## Usage
 
-By default `wgu` creates a backup of the current webgui and updates it to [`limetech/webgui/tree/6.4-wip`](https://github.com/limetech/webgui/tree/6.4-wip)
+By default `wgu` creates a backup of the current webgui and updates it to [`limetech/webgui/tree/master`](https://github.com/limetech/webgui/tree/master)
 ```
 wget https://raw.githubusercontent.com/realies/webgui-updater/master/wgu
 chmod +x wgu
